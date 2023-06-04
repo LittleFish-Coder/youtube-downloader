@@ -1,3 +1,4 @@
+import os
 from pytube import YouTube
 from moviepy.editor import VideoFileClip, AudioFileClip
 
@@ -8,19 +9,26 @@ def progress_callback(stream, chunk, bytes_remaining):
     print(f"{progress:.2f}% downloaded")
 
 
-url = "https://youtu.be/JWwJckdNerg"
-# 建立YouTube對象
-yt = YouTube(url, on_progress_callback=progress_callback)
+url = "https://youtu.be/oYyWoovxq-8"
+# Create a YouTube object
+yt = YouTube(url, on_progress_callback=progress_callback, use_oauth=True)
 
-# 獲取最高解析度的影片流和音訊流
-video_stream = yt.streams.get_highest_resolution()
+# get the video stream with certain resolution
+video_stream = yt.streams.filter(res="1080p").first()
+# download the video
+video_stream.download(filename="Video.mp4")
+
+# get the audio stream
 audio_stream = yt.streams.get_audio_only()
+# download the audio
+audio_stream.download(filename="Audio.mp3")
 
-video_stream.download(filename='Video.mp4')
-audio_stream.download(filename='Audio.mp3')
-
-# # 將視頻和音訊文件合併成一個完整的影片文件
+# Merge the video and audio files into a single video file
 video = VideoFileClip('Video.mp4')
 audio = AudioFileClip('Audio.mp3')
 final_video = video.set_audio(audio)
 final_video.write_videofile(f"{yt.title}.mp4")
+
+# Then delete the video and audio files in the local directory
+os.remove("Audio.mp3")
+os.remove("Video.mp4")
