@@ -9,6 +9,7 @@ def progress_callback(stream, chunk, bytes_remaining):
     print(f"{progress:.2f}% downloaded")
 
 
+# specify the url of the video to be downloaded
 url = "https://youtu.be/oYyWoovxq-8"
 # Create a YouTube object
 yt = YouTube(url, on_progress_callback=progress_callback, use_oauth=True)
@@ -27,8 +28,8 @@ audio_stream.download(filename="Audio.mp3")
 video = VideoFileClip('Video.mp4')
 audio = AudioFileClip('Audio.mp3')
 final_video = video.set_audio(audio)
-final_video.write_videofile(f"{yt.title}.mp4")
+final_video.write_videofile(f"{yt.title}.mp4", codec="libx264", audio_codec="aac")
 
 # Then delete the video and audio files in the local directory
-os.remove("Audio.mp3")
-os.remove("Video.mp4")
+# os.remove("Audio.mp3")
+# os.remove("Video.mp4")
