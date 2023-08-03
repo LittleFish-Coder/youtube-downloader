@@ -1,6 +1,4 @@
-import os
 from pytube import YouTube
-from moviepy.editor import VideoFileClip, AudioFileClip
 
 
 def progress_callback(stream, chunk, bytes_remaining):
@@ -13,8 +11,5 @@ def progress_callback(stream, chunk, bytes_remaining):
 url = "https://youtu.be/oYyWoovxq-8"
 # Create a YouTube object
 yt = YouTube(url, on_progress_callback=progress_callback, use_oauth=True)
-
-# get the video stream with progressive=True and choose the last one
-video_stream = yt.streams.filter(progressive="True").last()
 # download the video
-video_stream.download(filename=f"{yt.title}.mp4")
+yt.streams.filter(progressive=True).last().download(filename=f"{yt.title}.mp4")

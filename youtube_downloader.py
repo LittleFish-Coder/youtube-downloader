@@ -16,6 +16,9 @@ yt = YouTube(url, on_progress_callback=progress_callback, use_oauth=True)
 
 # get the video stream with certain resolution
 video_stream = yt.streams.filter(res="1080p").first()
+# if the video stream is not available, get the highest resolution video stream
+if video_stream is None:
+    video_stream = yt.streams.get_highest_resolution()
 # download the video
 video_stream.download(filename="Video.mp4")
 
@@ -25,12 +28,13 @@ audio_stream = yt.streams.get_audio_only()
 audio_stream.download(filename="Audio.mp3")
 
 # Merge the video and audio files into a single video file
-video = VideoFileClip('Video.mp4')
-audio = AudioFileClip('Audio.mp3')
+video = VideoFileClip("Video.mp4")
+audio = AudioFileClip("Audio.mp3")
+# set the audio of the video as the audio file
 final_video = video.set_audio(audio)
-final_video.write_videofile(
-    f"{yt.title}.mp4", codec="libx264", audio_codec="aac")
+# specify the output video format codec as H.264 and audio codec as AAC
+final_video.write_videofile(f"{yt.title}.mp4", codec="libx264", audio_codec="aac")
 
 # Then delete the video and audio files in the local directory
-# os.remove("Audio.mp3")
-# os.remove("Video.mp4")
+os.remove("Audio.mp3")
+os.remove("Video.mp4")
