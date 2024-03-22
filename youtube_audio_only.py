@@ -8,9 +8,14 @@ def progress_callback(stream, chunk, bytes_remaining):
 
 
 # specify the url of the video to be downloaded
-url = "https://youtu.be/oYyWoovxq-8"
+url = "https://youtu.be/0QlYn3L7B1g"
 # Create a YouTube object
 yt = YouTube(url, on_progress_callback=progress_callback, use_oauth=True)
 
-# download the audio only with AAC codec
-yt.streams.filter(only_audio=True).first().download(filename=f"{yt.title}.mp3")
+# Filter the streams to get the one with only audio (highest bitrate)
+audio_stream = yt.streams.filter(only_audio=True, file_extension="mp4").first()
+
+# Download the audio with the highest bitrate and AAC codec
+audio_stream.download(filename=f"{yt.title}.mp4")
+
+print("Download completed.")
