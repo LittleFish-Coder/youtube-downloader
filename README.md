@@ -17,6 +17,7 @@ The packages are listed in the requirements.txt file:
 - pytube
 - yt-dlp
 - moviepy
+- streamlit
 
 Use the following command to install the packages.
 
@@ -24,10 +25,12 @@ Use the following command to install the packages.
 pip install -r requirements.txt
 ```
 
-Or use pip3 depending on your system.
+## Web App
+
+use the following command to run the web app.
 
 ```bash
-pip3 install -r requirements.txt
+streamlit run app.py
 ```
 
 ## Contents
