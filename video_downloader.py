@@ -2,6 +2,13 @@ import os
 from pytube import YouTube
 from moviepy.editor import VideoFileClip, AudioFileClip
 
+# output folder
+output_folder = "output"
+
+# create the output folder if it does not exist
+if not os.path.exists(output_folder):
+    os.makedirs(output_folder)
+
 
 def progress_callback(stream, chunk, bytes_remaining):
     size = stream.filesize
@@ -33,7 +40,9 @@ audio = AudioFileClip("Audio.mp3")
 # set the audio of the video as the audio file
 merge_video = video.set_audio(audio)
 # specify the output video format codec as H.264 and audio codec as AAC
-merge_video.write_videofile(f"{yt.title}.mp4", codec="libx264", audio_codec="aac", fps=30)
+merge_video.write_videofile(
+    f"{output_folder}/{yt.title}.mp4", codec="libx264", audio_codec="aac", fps=30
+)
 
 # Then delete the video and audio files in the local directory
 os.remove("Audio.mp3")
