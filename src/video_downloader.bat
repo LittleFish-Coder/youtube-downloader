@@ -1,10 +1,11 @@
 @echo off
-@REM This script requires yt-dlp to be installed
+@REM This script calls the Python file to download YouTube videos
 
-@REM REM Prompt the user to input the YouTube URL
+@REM Prompt the user to input the YouTube URL
 set /p youtube_url=Please input the YouTube URL: 
 
-@REM REM Download the video using yt-dlp
-yt-dlp -f "bestvideo[ext=mp4][height<=1080]+bestaudio[ext=m4a]" -o "%%(title)s.%%(ext)s" --force-overwrites %youtube_url%
+@REM Call the Python script with the entered URL
+python video_downloader_fast.py --url %youtube_url%
 
+@REM Pause to allow the user to see the output
 pause

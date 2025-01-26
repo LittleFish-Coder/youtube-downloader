@@ -1,15 +1,36 @@
-from pytube import YouTube
+import argparse
+from pytubefix import YouTube
+from pytubefix.cli import on_progress
 
+def download_video(url):
+    """Download the YouTube video from the provided URL."""
+    try:
+        yt = YouTube(url, on_progress_callback=on_progress, use_oauth=True)
+        stream = yt.streams.filter(progressive=True).last()
+        if stream:
+            stream.download(filename=f"{yt.title}.mp4")
+            print(f"Video '{yt.title}' downloaded successfully.")
+        else:
+            print("No suitable stream found for the video.")
+    except Exception as e:
+        print(f"An error occurred: {e}")
 
-def progress_callback(stream, chunk, bytes_remaining):
-    size = stream.filesize
-    progress = (size - bytes_remaining) / size * 100
-    print(f"{progress:.2f}% downloaded")
+def reformat_url(url):
+    """Reformat the YouTube video URL."""
+    if "youtu.be" in url:
+        return url
+    elif "youtube.com" in url:
+        video_id = url.split("v=")[1]
+        return f"https://youtu.be/{video_id}"
+    else:
+        return url
 
+def main():
+    parser = argparse.ArgumentParser(description="Download YouTube videos.")
+    parser.add_argument("--url", default="https://youtu.be/oYyWoovxq-8", help="URL of the YouTube video to download.")
+    args = parser.parse_args()
+    # Call the download_video function with the provided URL
+    download_video(reformat_url(args.url))
 
-# specify the url of the video to be downloaded
-url = "https://youtu.be/oYyWoovxq-8"
-# Create a YouTube object
-yt = YouTube(url, on_progress_callback=progress_callback, use_oauth=True)
-# download the video
-yt.streams.filter(progressive=True).last().download(filename=f"{yt.title}.mp4")
+if __name__ == "__main__":
+    main()

@@ -1,5 +1,6 @@
 import os
-from pytube import YouTube
+from pytubefix import YouTube
+from pytubefix.cli import on_progress
 from moviepy.editor import VideoFileClip, AudioFileClip
 
 # output folder
@@ -10,16 +11,10 @@ if not os.path.exists(output_folder):
     os.makedirs(output_folder)
 
 
-def progress_callback(stream, chunk, bytes_remaining):
-    size = stream.filesize
-    progress = (size - bytes_remaining) / size * 100
-    print(f"{progress:.2f}% downloaded")
-
-
 # specify the url of the video to be downloaded
 url = "https://youtu.be/9EAR3kh2STg"
 # Create a YouTube object
-yt = YouTube(url, on_progress_callback=progress_callback, use_oauth=True)
+yt = YouTube(url, on_progress_callback=on_progress, use_oauth=True)
 
 # get the video stream with certain resolution
 video_stream = yt.streams.filter(res="1080p").first()
