@@ -1,6 +1,7 @@
 import argparse
 from pytubefix import YouTube
 from pytubefix.cli import on_progress
+import re
 
 def download_video(url):
     """Download the YouTube video from the provided URL."""
@@ -17,10 +18,13 @@ def download_video(url):
 
 def reformat_url(url):
     """Reformat the YouTube video URL."""
-    if "youtu.be" in url:
+    youtu_be_pattern = re.compile(r"^https?://youtu\.be/")
+    youtube_pattern = re.compile(r"^https?://(www\.)?youtube\.com/watch\?v=([^&]+)")
+
+    if youtu_be_pattern.match(url):
         return url
-    elif "youtube.com" in url:
-        video_id = url.split("v=")[1]
+    elif youtube_pattern.match(url):
+        video_id = youtube_pattern.match(url).group(2)
         return f"https://youtu.be/{video_id}"
     else:
         return url
