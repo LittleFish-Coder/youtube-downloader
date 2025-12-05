@@ -22,21 +22,21 @@ def download_video(url, output_folder="output"):
         if video_stream is None:
             video_stream = yt.streams.get_highest_resolution()
         # download the video
-        video_stream.download(filename=f"{output_folder}/video.mp4")
+        video_stream.download(output_path=output_folder, filename="video.mp4")
 
         # get the audio stream
         audio_stream = yt.streams.get_audio_only()
         # download the audio
-        audio_stream.download(filename=f"{output_folder}/audio.mp3")
+        audio_stream.download(output_path=output_folder, filename="audio.mp3")
 
         # Merge the video and audio files into a single video file
-        video = VideoFileClip(f"{output_folder}/video.mp4")
-        audio = AudioFileClip(f"{output_folder}/audio.mp3")
+        video = VideoFileClip(os.path.join(output_folder, "video.mp4"))
+        audio = AudioFileClip(os.path.join(output_folder, "audio.mp3"))
         # set the audio of the video as the audio file
         merge_video = video.set_audio(audio)
         # specify the output video format codec as H.264 and audio codec as AAC
         merge_video.write_videofile(
-            f"{output_folder}/{yt.title}.mp4", codec="libx264", audio_codec="aac", fps=30
+            os.path.join(output_folder, f"{yt.title}.mp4"), codec="libx264", audio_codec="aac", fps=30
         )
     except Exception as e:
         print(f"An error occurred: {e}")
