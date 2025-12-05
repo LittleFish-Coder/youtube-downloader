@@ -5,6 +5,14 @@ from moviepy.editor import VideoFileClip, AudioFileClip
 import re
 import argparse
 
+def sanitize_filename(filename):
+    """Remove or replace characters that are problematic for filenames."""
+    # Replace problematic characters with underscores or remove them
+    filename = re.sub(r'[<>:"/\\|?*]', '_', filename)
+    # Remove leading/trailing spaces and dots
+    filename = filename.strip(' .')
+    return filename
+
 def download_video(url, output_folder="output"):
     """Download the YouTube video from the provided URL."""
 
@@ -35,8 +43,9 @@ def download_video(url, output_folder="output"):
         # set the audio of the video as the audio file
         merge_video = video.set_audio(audio)
         # specify the output video format codec as H.264 and audio codec as AAC
+        safe_title = sanitize_filename(yt.title)
         merge_video.write_videofile(
-            os.path.join(output_folder, f"{yt.title}.mp4"), codec="libx264", audio_codec="aac", fps=30
+            os.path.join(output_folder, f"{safe_title}.mp4"), codec="libx264", audio_codec="aac", fps=30
         )
     except Exception as e:
         print(f"An error occurred: {e}")
